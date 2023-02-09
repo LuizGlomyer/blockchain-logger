@@ -8,9 +8,6 @@ class Connection:
         self.web3 = Web3(Web3.HTTPProvider(self.infura_url))
         self.contract_address = f'{os.getenv("CONTRACT_ADDRESS")}'
         
-        print(os.getenv("API_KEY"))
-        print(os.getenv("PRIVATE_KEY"))
-        
         my_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.join(my_path, "contract_abi.json")
         abi = open(path, "r")
@@ -21,31 +18,25 @@ class Connection:
         self.from_account = f'{os.getenv("FROM_ACCOUNT")}'
         self.private_key = f'{os.getenv("PRIVATE_KEY")}'
 
-    def fetch_items(self):
-        items = self.contract.functions.retrieve().call()
+    def fetch_items(self, user_id):
+        items = self.contract.functions.retrieveActions(user_id).call({"from":self.from_account})
         return items
 
-    def create_item(self, value):
-        tx = self.contract.functions.store(
-            value).build_transaction()
-        tx.update(
-            {'nonce': self.web3.eth.get_transaction_count(self.from_account)})
-
-        tx['gas'] = self.contract.functions.store(value).estimateGas()
+    def create_item(self, id, action):
+        #TODO tratar falha na transação
+        tx = self.contract.functions.store(id, action).build_transaction()
+        tx.update({'nonce': self.web3.eth.get_transaction_count(self.from_account)})
+        tx['gas'] = self.contract.functions.store(id, action).estimateGas()
         signed_tx = self.web3.eth.account.sign_transaction(tx, self.private_key)
         tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
-        print("Transaction hash:", self.web3.toHex(tx_hash))
         transaction_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
-        print("Transaction receipt:\n", transaction_receipt)
+
+        #print("transação:")
+        #print(tx)
+        #print("Transaction hash:", self.web3.toHex(tx_hash))
+        #print("Transaction receipt:\n", transaction_receipt)
 
         return transaction_receipt
-
-
-blockchain = Connection()
-
-
-
-
-
-#receipt = blockchain.create_item(30)
-print(blockchain.fetch_items())
+    
+    def check_tx_by_hash(self, hash):
+        return self.web3.eth.get_transaction(hash)

@@ -4,9 +4,8 @@ load_dotenv()
 from flask import Flask
 from flask_smorest import Api
 
-#from blueprints.item import blp as ItemBlueprint
-#from blueprints.store import blp as StoreBlueprint
 from blueprints.access import blp as AccessBlueprint
+from blueprints.view import blp as ViewBlueprint
 
 app = Flask(__name__)
 
@@ -20,6 +19,5 @@ app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-
 
 api = Api(app)
 
-#api.register_blueprint(ItemBlueprint)
-#api.register_blueprint(StoreBlueprint)
 api.register_blueprint(AccessBlueprint)
+api.register_blueprint(ViewBlueprint)
