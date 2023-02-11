@@ -6,6 +6,8 @@ from flask_smorest import Api
 
 from blueprints.access import blp as AccessBlueprint
 from blueprints.view import blp as ViewBlueprint
+from blueprints.actions import blp as ActionsBlueprint
+from blueprints.reports import blp as ReportsBlueprint
 
 app = Flask(__name__)
 
@@ -21,3 +23,5 @@ api = Api(app)
 
 api.register_blueprint(AccessBlueprint)
 api.register_blueprint(ViewBlueprint)
+api.register_blueprint(ActionsBlueprint)
+api.register_blueprint(ReportsBlueprint)

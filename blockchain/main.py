@@ -40,3 +40,5 @@ class Connection:
     
     def check_tx_by_hash(self, hash):
         return self.web3.eth.get_transaction(hash)
+
+blockchain_connection = Connection()
