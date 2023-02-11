@@ -16,7 +16,11 @@ class View(MethodView):
     @blp.response(200)
     def get(cls, user_id):
         try:
-            value = blockchain_connection.fetch_items(user_id)
-            return {"logs":value, "id": user_id}
+            logs = blockchain_connection.fetch_items(user_id)        
+            # if some the list becomes unordered because of 
+            # unsynchronization due to multiple requests
+            logs.sort()
+    
+            return {"logs": logs, "id": user_id}
         except KeyError:
             abort(404, message="Not found.")
