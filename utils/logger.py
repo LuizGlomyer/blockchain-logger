@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from blockchain.main import blockchain_connection
 from utils import utils
@@ -5,7 +6,7 @@ from utils import utils
 class Logger():
     def __init__(self, type):
         self.logger_type = type
-        self.app_name = "APP_RU"
+        self.app_name = os.getenv("APP_NAME")
         self.blockchain_connection = blockchain_connection
         # defines a mininum size for the first part of the log message
         self.WHITESPACE_PAD_SIZE = utils.calculate_pad_size()
@@ -22,7 +23,7 @@ class Logger():
         name = user.get('name')
         id = user['id']
         first_part = f"{date} {self.app_name}:{self.logger_type}".ljust(self.WHITESPACE_PAD_SIZE)
-        log_message = f"{first_part} | User {name} [{id}] {action_description}"
+        log_message = f"{first_part} | User '{name}' [{id}] {action_description}"
 
         return log_message
 
