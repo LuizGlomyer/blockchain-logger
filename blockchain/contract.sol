@@ -1,18 +1,35 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
-contract UserActions {
-    mapping(string => string[]) public actions;
-
-    function store(string memory user_id, string memory action) public {
-        actions[user_id].push(action);
+contract UserInteractions {
+    address owner;
+    mapping(string => string[]) public interactions;
+    
+    constructor() {
+        owner = msg.sender;
     }
 
-    function retrieveActions(string memory user_id)
+    event SaveSender(address sender);
+
+    
+    function logMessage(string memory user_id, string memory action) public {
+        emit SaveSender(msg.sender);
+        require(msg.sender == owner);
+        interactions[user_id].push(action);
+    }
+    /*
+    function logMessage(string memory user_id, string memory action) public {
+        require(msg.sender == owner);
+        interactions[user_id].push(action);
+    }
+    */
+
+    function retrieveInteractions(string memory user_id)
         public
         view
         returns (string[] memory)
     {
-        return actions[user_id];
+        require(msg.sender == owner);
+        return interactions[user_id];
     }
 }

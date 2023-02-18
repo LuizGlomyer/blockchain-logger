@@ -13,6 +13,12 @@ class HexJsonEncoder(json.JSONEncoder):
 # to deserialize it in the response, it must first be encoded
 def receipt_deserializer(receipt):
     receipt = dict(receipt)
+
+    for i in range(len(receipt["logs"])):
+        receipt["logs"][i] = dict(receipt["logs"][i])
+        receipt["logs"][i] = json.dumps(receipt["logs"][i], cls=HexJsonEncoder)
+        receipt["logs"][i] = json.loads(receipt["logs"][i])
+
     receipt = json.dumps(receipt, cls=HexJsonEncoder)
     receipt = json.loads(receipt)
     

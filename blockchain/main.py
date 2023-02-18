@@ -26,7 +26,7 @@ class Connection:
 
 
     def fetch_items(self, user_id):
-        items = self.contract.functions.retrieveActions(user_id).call({"from":self.from_account})
+        items = self.contract.functions.retrieveInteractions(user_id).call({"from":self.from_account})
         return items
 
 
@@ -37,9 +37,9 @@ class Connection:
         if not self.is_transacting():
             self.semaphore.acquire()
             
-            tx = self.contract.functions.store(mapping_id, log_message).build_transaction()
+            tx = self.contract.functions.logMessage(mapping_id, log_message).build_transaction()
             tx.update({'nonce': self.web3.eth.get_transaction_count(self.from_account)})
-            tx['gas'] = self.contract.functions.store(mapping_id, log_message).estimateGas()
+            tx['gas'] = self.contract.functions.logMessage(mapping_id, log_message).estimateGas()
             signed_tx = self.web3.eth.account.sign_transaction(tx, self.private_key)
             tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
             transaction_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)

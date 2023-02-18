@@ -12,5 +12,5 @@ Then run a Docker container based on the built image.
 ```sh
 docker run --rm -p 5000:5000 -v "$(pwd):/app" blockchain-api-uea-ru
 ```
-The API can be used using this url:
+The API's documentation can be seen and used on this url:
 >http://localhost:5000/swagger-ui
