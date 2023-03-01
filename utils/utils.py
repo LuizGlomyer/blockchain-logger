@@ -1,6 +1,16 @@
 import json
-
+import os
+import requests
+from web3 import Web3
 from hexbytes import HexBytes
+
+message_template = "2020-01-01 00:00:00 APP_RU:"
+modules = [
+    "access",
+    "actions",
+    "reports",
+    "view"
+]
 
 class HexJsonEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -26,17 +36,45 @@ def receipt_deserializer(receipt):
 
 
 def calculate_pad_size():
-    modules_list = [
-        "access",
-        "actions",
-        "reports",
-        "view"
-    ]
-
     highest_count = 0
-    for module in modules_list:
+    for module in modules:
         if len(module) > highest_count:
             highest_count = len(module)
-    size = len("2020-01-01 00:00:00 APP_RU:") + highest_count
+    size = len(message_template) + highest_count
     
     return size
+
+
+def build_response(transaction_receipt, sent_data):
+    base_url = os.getenv("ETHERSCAN_URL")
+    etherscan_url = f"{base_url}{transaction_receipt['transactionHash']}"
+    response = {
+        "sentData": sent_data, 
+        "receipt": transaction_receipt, 
+        "status": transaction_receipt["status"],
+        "etherscanUrl": etherscan_url,
+        "transactionPaidPrice": calculate_paid_price(transaction_receipt)
+    }
+
+    return response
+
+
+def calculate_paid_price(transaction_receipt):
+    currencies = ["BRL", "USD"]
+    gas_price = float(Web3.fromWei(transaction_receipt["effectiveGasPrice"], 'ether'))
+    gas_used = transaction_receipt["gasUsed"]
+    calculated_prices = {"ETH": gas_price * gas_used}
+    try:
+        eth_info = requests.get('https://api.coinbase.com/v2/exchange-rates?currency=ETH', timeout=15)
+        eth_rates = eth_info.json()["data"]["rates"]
+
+        for currency in currencies:
+            currency_rate = float(eth_rates[currency])
+            calculated_prices[currency] = currency_rate * gas_price * gas_used
+        
+    except:
+        calculated_prices = {"info": "Timeout error"}
+
+    return calculated_prices
+
+    #https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BRL,USD

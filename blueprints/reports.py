@@ -15,8 +15,18 @@ logger = Logger("reports")
 class View(MethodView):
     @blp.response(200)
     def get(cls, user_id):
+        from utils import utils
         try:
-            logs = blockchain_connection.fetch_items(user_id)        
+            WHITESPACE_PAD_SIZE = utils.calculate_pad_size()
+            print(WHITESPACE_PAD_SIZE, flush=True)
+            logs = blockchain_connection.fetch_items(user_id)   
+            print(logs, flush=True)
+            for i, log in enumerate(logs):
+                if log.__contains__('|'):
+                    log = log.split(' | ')
+                    log[0] = log[0].ljust(WHITESPACE_PAD_SIZE)
+                    logs[i] = f"{log[0]} | {log[1]}"
+    
             # if some the list becomes unordered because of 
             # unsynchronization due to multiple requests
             logs.sort()

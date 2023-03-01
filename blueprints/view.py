@@ -3,7 +3,7 @@ from flask_smorest import Blueprint
 from schemas import AccessSchema
 from blockchain.main import Connection
 
-from utils.utils import receipt_deserializer
+from utils.utils import receipt_deserializer, build_response
 from utils.logger import Logger, UserInteractions
 
 blp = Blueprint("View", "view", description="Visualizing system data")
@@ -18,8 +18,7 @@ class View(MethodView):
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.VIEW_DATA)
         deserialized_receipt = receipt_deserializer(receipt)
-        
-        return {"sentData": item_data, "receipt": deserialized_receipt, "status": deserialized_receipt["status"]}
+        return build_response(deserialized_receipt, item_data)
     
 
 @blp.route("/view/ticket-list/")
@@ -29,8 +28,7 @@ class View(MethodView):
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.VIEW_TICKET_LIST)
         deserialized_receipt = receipt_deserializer(receipt)
-        
-        return {"sentData": item_data, "receipt": deserialized_receipt, "status": deserialized_receipt["status"]}
+        return build_response(deserialized_receipt, item_data)
     
 
 @blp.route("/view/ticket-history/")
@@ -40,8 +38,7 @@ class View(MethodView):
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.VIEW_TICKET_HISTORY)
         deserialized_receipt = receipt_deserializer(receipt)
-        
-        return {"sentData": item_data, "receipt": deserialized_receipt, "status": deserialized_receipt["status"]}
+        return build_response(deserialized_receipt, item_data)
     
   
 @blp.route("/view/food-menu/")
@@ -51,5 +48,4 @@ class View(MethodView):
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.VIEW_FOOD_MENU)
         deserialized_receipt = receipt_deserializer(receipt)
-        
-        return {"sentData": item_data, "receipt": deserialized_receipt, "status": deserialized_receipt["status"]}
+        return build_response(deserialized_receipt, item_data)

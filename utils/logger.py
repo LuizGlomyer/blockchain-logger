@@ -22,8 +22,11 @@ class Logger():
         date = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
         name = user.get('name')
         id = user['id']
-        first_part = f"{date} {self.app_name}:{self.logger_type}".ljust(self.WHITESPACE_PAD_SIZE)
-        log_message = f"{first_part} | User '{name}' [{id}] {action_description}"
+        first_part = f"{date} {self.app_name}:{self.logger_type}"
+        if name and name != "":
+            log_message = f"{first_part} | '{name}' [{id}] {action_description}"
+        else: 
+            log_message = f"{first_part} | [{id}] {action_description}"
 
         return log_message
 
@@ -48,6 +51,8 @@ class Logger():
             return "selected a ticket for consumption"
         elif interaction == UserInteractions.PIX_PAYMENT:
             return "payed a ticket with Pix"
+        elif interaction == UserInteractions.CREATE_USER:
+            return "created a new user"
             
         
 class UserInteractions():
@@ -60,3 +65,4 @@ class UserInteractions():
     BUY_TICKET = 7
     SELECT_TICKET = 8
     PIX_PAYMENT = 9
+    CREATE_USER = 10

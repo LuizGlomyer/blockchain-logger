@@ -2,13 +2,13 @@ from web3 import Web3
 import os
 import time
 import json
+from statistics import median
 from threading import Semaphore
 
 class Connection:
     def __init__(self):
         self.semaphore = Semaphore()
-        
-        self.infura_url = f'{os.getenv("PROVIDER_URL")}{os.getenv("API_KEY")}'
+        self.infura_url = f'{os.getenv("PROVIDER_URL")}{os.getenv("INFURA_API_KEY")}'
         self.web3 = Web3(Web3.HTTPProvider(self.infura_url))
         self.contract_address = f'{os.getenv("CONTRACT_ADDRESS")}'
         
@@ -36,6 +36,13 @@ class Connection:
 
         if not self.is_transacting():
             self.semaphore.acquire()
+
+            def estimate_chain_gas():
+                last_block = self.web3.eth.get_block("latest", full_transactions=True)
+                transactions = last_block.transactions
+                # Returns the median of the gas in previous block transactions
+                return int(median(t.gas for t in transactions)) 
+            #print(estimate_chain_gas(), flush=True)
             
             tx = self.contract.functions.logMessage(mapping_id, log_message).build_transaction()
             tx.update({'nonce': self.web3.eth.get_transaction_count(self.from_account)})
@@ -43,7 +50,7 @@ class Connection:
             signed_tx = self.web3.eth.account.sign_transaction(tx, self.private_key)
             tx_hash = self.web3.eth.send_raw_transaction(signed_tx.rawTransaction)
             transaction_receipt = self.web3.eth.wait_for_transaction_receipt(tx_hash)
-
+            
             self.semaphore.release()
             return transaction_receipt
     
