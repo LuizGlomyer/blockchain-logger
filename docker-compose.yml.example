@@ -1,0 +1,12 @@
+version: '3'
+services:
+  blockchain_logger:
+    container_name: blockchain_logger
+    image: blockchain-api-uea-ru
+    restart: on-failure
+    volumes: 
+      - /home/luizglomyer/Documentos/git/blockchain-api-uea-ru:/app 
+    ports: 
+      - '5000:5000'
+    expose:
+      - "5000"
