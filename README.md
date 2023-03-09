@@ -10,7 +10,7 @@ Next, copy the file ```.env.example``` as ```.env``` and insert the needed envir
 
 Then run a Docker container based on the built image.
 ```sh
-docker run --rm -p 5000:5000 -v "$(pwd):/app" blockchain-api-uea-ru
+docker run --rm -p 5000:5000 -v "$(CURDIR):/app" blockchain-api-uea-ru
 ```
 
 Alternatively, you can just run:
