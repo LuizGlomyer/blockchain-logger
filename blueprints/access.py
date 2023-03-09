@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from schemas import AccessSchema
+from schemas import RequestSchema
 
 from utils.utils import receipt_deserializer, build_response
 from utils.logger import Logger, UserInteractions
@@ -11,7 +11,7 @@ logger = Logger("access")
 
 @blp.route("/access/create-user/")
 class Access(MethodView):
-    @blp.arguments(AccessSchema)
+    @blp.arguments(RequestSchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.CREATE_USER)
@@ -21,7 +21,7 @@ class Access(MethodView):
     
 @blp.route("/access/login/")
 class Access(MethodView):
-    @blp.arguments(AccessSchema)
+    @blp.arguments(RequestSchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.LOGIN)
@@ -31,7 +31,7 @@ class Access(MethodView):
 
 @blp.route("/access/logoff/")
 class Access(MethodView):
-    @blp.arguments(AccessSchema)
+    @blp.arguments(RequestSchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.LOGOFF)

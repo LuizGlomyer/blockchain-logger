@@ -3,30 +3,27 @@ import requests
 import urllib.parse
 import uuid
 
-base_url = "http://localhost:5000"
+base_url = "http://blockchain_logger:5000"
 #user_id = "email@test.com"
 user_id = uuid.uuid4().hex
 
-user_params = {
+params = {
   "id": user_id,
   "name": "User"
 }
 
 
-def transact(endpoint, params):
-    params |= user_params
-    print(params)
+def transact(endpoint):
     print(f"Endpoint - {endpoint}", end="")
     response = requests.post(base_url + endpoint, json=params)
     data = response.json()
     print(f"\tStatus: {data['status']}")
-    print(f"Transaction: {data['receipt']['transactionHash']}")
 
     assert(data["status"] == 1)
 
-"""
+
 @pytest.mark.skip(reason="disabled in favor of testing each endpoint separately")
-def test_transaction():
+def test_integration_transaction():
     endpoints = [
       "/access/create-user/",
       "/view/food-menu/",
@@ -44,27 +41,24 @@ def test_transaction():
         error_exists = True
     
     assert(not error_exists)
-"""
 
-def test_create_user():
-    params = {}
+
+def test_integration_create_user():
     endpoint = "/access/create-user/"
-    transact(endpoint, params)
+    transact(endpoint)
 
 
-def test_view_food_menu():
-    params = {}
+def test_integration_view_food_menu():
     endpoint = "/view/food-menu/"
-    transact(endpoint, params)
+    transact(endpoint)
 
 
-def test_buy_ticket():
-    params = {"amount": 3, "price_table_id": 555}
+def test_integration_buy_ticket():
     endpoint = "/actions/buy-ticket/"
-    transact(endpoint, params)
+    transact(endpoint)
 
 
-def test_reports():
+def test_integration_reports():
     encoded_id = urllib.parse.quote(user_id)
     params = {
       "user_id": user_id

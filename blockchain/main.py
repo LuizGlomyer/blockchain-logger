@@ -42,7 +42,7 @@ class Connection:
                 transactions = last_block.transactions
                 # Returns the median of the gas in previous block transactions
                 return int(median(t.gas for t in transactions)) 
-            #print(estimate_chain_gas(), flush=True)
+            #print(estimate_chain_gas(), flush=True) 
             
             tx = self.contract.functions.logMessage(mapping_id, log_message).build_transaction()
             tx.update({'nonce': self.web3.eth.get_transaction_count(self.from_account)})
