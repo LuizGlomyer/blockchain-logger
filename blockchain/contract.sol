@@ -4,19 +4,17 @@ pragma solidity ^0.8.0;
 contract UserInteractions {
     address owner;
     mapping(string => string[]) public interactions;
-    
+
     constructor() {
         owner = msg.sender;
     }
 
     event SaveSender(address sender);
 
-    
     function logMessage(string memory user_id, string memory action) public {
-        emit SaveSender(msg.sender);
-        require(msg.sender == owner);
         interactions[user_id].push(action);
     }
+
     /*
     function logMessage(string memory user_id, string memory action) public {
         require(msg.sender == owner);

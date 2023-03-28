@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from schemas import RequestSchema, ChargeQRCodeSchema, UserByEmailSchema, ViewFoodMenuSchema, ViewCommentEmailPriceTableSchema
+from schemas import RequestSchema, ChargeQRCodeSchema, UserByEmailSchema, ViewFoodMenuSchema, ViewCommentEmailPriceTableSchema, HistorySchema
 from blockchain.main import Connection
 
 from utils.utils import receipt_deserializer, build_response
@@ -63,20 +63,10 @@ class View(MethodView):
 
 @blp.route("/view/first-ticket-not-consumed/")
 class View(MethodView):
-    @blp.arguments(RequestSchema)
+    @blp.arguments(ViewCommentEmailPriceTableSchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.VIEW_FIRST_TICKET_NOT_CONSUMED)
-        deserialized_receipt = receipt_deserializer(receipt)
-        return build_response(deserialized_receipt, item_data)
-
-
-@blp.route("/view/charge-qrcode/")
-class View(MethodView):
-    @blp.arguments(ChargeQRCodeSchema)
-    @blp.response(200)
-    def post(self, item_data):
-        receipt = logger.log(item_data, UserInteractions.VIEW_CHARGE_QR_CODE)
         deserialized_receipt = receipt_deserializer(receipt)
         return build_response(deserialized_receipt, item_data)
 
@@ -93,7 +83,7 @@ class View(MethodView):
 
 @blp.route("/view/comment-email-price-table/")
 class View(MethodView):
-    @blp.arguments(RequestSchema)
+    @blp.arguments(ViewCommentEmailPriceTableSchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.VIEW_COMMENT_EMAIL_PRICE_TABLE)
@@ -143,7 +133,7 @@ class View(MethodView):
 
 @blp.route("/view/history/")
 class View(MethodView):
-    @blp.arguments(RequestSchema)
+    @blp.arguments(HistorySchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.VIEW_HISTORY)

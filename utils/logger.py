@@ -70,22 +70,22 @@ class Logger():
 
 
         elif interaction == UserInteractions.VIEW_USER:
-            return f"viewed the user"
+            return f"viewed the user informations"
         
         elif interaction == UserInteractions.VIEW_USER_BY_EMAIL:
             return f"viewed user information for following e-mail: {user_data['user_email']}"
         
         elif interaction == UserInteractions.CREATE_PRICE_TABLE_ITEM:
-            return f"created a new item in the price table {data}"
+            return f"created a new item in the price table: {data}"
         
         elif interaction == UserInteractions.VIEW_PRICE_TABLE:
             return f"viewed the price table"    
         
         elif interaction == UserInteractions.EDIT_PRICE_TABLE:
-            return f"edited \"{user_data['meal_type']}\" in the price table, id: {user_data['meal_id']}, unit cost: {user_data['unit_cost']}"
+            return f"edited the price table: {data}"
         
         elif interaction == UserInteractions.DELETE_ITEM_PRICE_TABLE:
-            return f"deleted \"{user_data['meal_type']}\" from the price table, id: {user_data['meal_id']}"
+            return f"deleted from the price table: {user_data['meal_id']}"
         
         elif interaction == UserInteractions.CREATE_DAY_FOOD_MENU:
             return f"created a new food menu: {data}"
@@ -103,7 +103,7 @@ class Logger():
             return f"deleted an item from food menu: \"{user_data['food_menu_id']}\""
         
         elif interaction == UserInteractions.VIEW_HISTORY:
-            return f"viewed their history"
+            return f"viewed their history from {user_data['start_date']} to {user_data['end_date']}"
         
         elif interaction == UserInteractions.CREATE_COMMENT:
             return f"created a new comment: {data}"
@@ -121,13 +121,13 @@ class Logger():
             return f"viewed tickets not consumed"
         
         elif interaction == UserInteractions.VIEW_FIRST_TICKET_NOT_CONSUMED:
-            return f"viewed first ticket not consumed"
+            return f"viewed tickets not consumed of item {user_data['price_table_id']}"
         
         elif interaction == UserInteractions.VIEW_CHARGE_QR_CODE:
             return f"charged the QR Code with {user_data['charge']}, registration: {user_data['registration']}"
         
         elif interaction == UserInteractions.EDIT_TICKET:
-            return f"edited the ticket: {user_data['ticket_id']}"
+            return f"edited the ticket: {user_data['ticket_id']} of item {user_data['price_table_id']}"
         
         elif interaction == UserInteractions.CONSUME_TICKET:
             return f"consumed the ticket: {user_data['ticket_id']}"

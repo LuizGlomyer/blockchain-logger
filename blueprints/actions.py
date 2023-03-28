@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from schemas import RequestSchema, BuyTicketSchema, ModifyTicketSchema, PriceTableItemSchema, FoodMenuSchema, DeleteFoodMenuSchema, CommentSchema
+from schemas import RequestSchema, BuyTicketSchema, ModifyTicketSchema, PriceTableItemSchema, FoodMenuSchema, DeleteFoodMenuSchema, CommentSchema, ConsumeTicketSchema, ChargeQRCodeSchema, CreatePriceTableItemSchema, DeletePriceTableItemSchema, CreateCommentSchema
 
 
 from utils.utils import receipt_deserializer, build_response
@@ -42,7 +42,7 @@ class View(MethodView):
 
 @blp.route("/actions/create-price-table-item/")
 class View(MethodView):
-    @blp.arguments(PriceTableItemSchema)
+    @blp.arguments(CreatePriceTableItemSchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.CREATE_PRICE_TABLE_ITEM)
@@ -62,7 +62,7 @@ class View(MethodView):
 
 @blp.route("/actions/delete-price-table-item/")
 class View(MethodView):
-    @blp.arguments(PriceTableItemSchema)
+    @blp.arguments(DeletePriceTableItemSchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.DELETE_ITEM_PRICE_TABLE)
@@ -102,7 +102,7 @@ class View(MethodView):
 
 @blp.route("/actions/create-comment/")
 class View(MethodView):
-    @blp.arguments(CommentSchema)
+    @blp.arguments(CreateCommentSchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.CREATE_COMMENT)
@@ -122,9 +122,19 @@ class View(MethodView):
 
 @blp.route("/actions/consume-ticket/")
 class View(MethodView):
-    @blp.arguments(ModifyTicketSchema)
+    @blp.arguments(ConsumeTicketSchema)
     @blp.response(200)
     def post(self, item_data):
         receipt = logger.log(item_data, UserInteractions.CONSUME_TICKET)
+        deserialized_receipt = receipt_deserializer(receipt)
+        return build_response(deserialized_receipt, item_data)
+
+
+@blp.route("/actions/charge-qrcode/")
+class View(MethodView):
+    @blp.arguments(ChargeQRCodeSchema)
+    @blp.response(200)
+    def post(self, item_data):
+        receipt = logger.log(item_data, UserInteractions.VIEW_CHARGE_QR_CODE)
         deserialized_receipt = receipt_deserializer(receipt)
         return build_response(deserialized_receipt, item_data)

@@ -1,4 +1,3 @@
-import pytest
 import requests
 import urllib.parse
 import uuid
@@ -6,6 +5,7 @@ import uuid
 base_url = "http://localhost:5000"
 #user_id = "email@test.com"
 user_id = uuid.uuid4().hex
+user_id = "glomyer@uea.edu.br"
 
 user_params = {
   "id": user_id,
@@ -24,27 +24,6 @@ def transact(endpoint, params):
 
     assert(data["status"] == 1)
 
-"""
-@pytest.mark.skip(reason="disabled in favor of testing each endpoint separately")
-def test_transaction():
-    endpoints = [
-      "/access/create-user/",
-      "/view/food-menu/",
-      "/actions/buy-ticket/"
-    ]
-  
-    print(f"User id: {user_id}")
-    error_exists = False
-    for i, endpoint in enumerate(endpoints):
-      print(f"Endpoint {i + 1} - {endpoint}", end="")
-      response = requests.post(base_url + endpoint, json=params)
-      data = response.json()
-      print(f"\tStatus: {data['status']}")
-      if data["status"] != 1:
-        error_exists = True
-    
-    assert(not error_exists)
-"""
 
 def test_create_user():
     params = {}
@@ -59,7 +38,7 @@ def test_view_food_menu():
 
 
 def test_buy_ticket():
-    params = {"amount": 3, "price_table_id": 555}
+    params = {"amount": 3, "price_table_id": "555"}
     endpoint = "/actions/buy-ticket/"
     transact(endpoint, params)
 
@@ -77,3 +56,4 @@ def test_reports():
 
     assert(data["id"] == user_id)
     assert(type(data["logs"]) == list)
+
