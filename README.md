@@ -2,7 +2,7 @@
 
 An auditing system for the app _Restaurante Universitário da UEA_ that logs messages securely over the Ethereum Network and generates reports of user interactions. This is the final project of my bachelor's degree in Information Systems. My undergraduate thesis can be found [here](https://github.com/LuizGlomyer/LaTeX/blob/master/Monografia/Monografia_Luiz_Glomyer.pdf) (in Portuguese).
 
- To run this project, you will need Docker. Firstly, build an image with the following command:
+To run this project, you will need Docker. Firstly, build an image with the following command:
 
 ```sh
 docker build -t blockchain-api-uea-ru .
@@ -29,3 +29,5 @@ make test-integration
 
 The API's documentation can be seen and used on this url:
 >http://localhost:5000/swagger-ui
+
+Video demonstrations can be seen [here](https://youtu.be/91tpNckPmTY) and [here](https://youtu.be/MpzrIi9vwa4)
